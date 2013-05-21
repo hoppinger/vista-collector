@@ -13,6 +13,10 @@ You put the Clients on a server with Wordpress projects. You set up the cron job
     # On your server with all the Wordpress directories
     git clone git@github.com:tolgap/wp-vista-collector.git
     cd wp-vista-collector/
+    
+Install the gems with bundler
+
+    bundle install
 
 Proceed to set up the settings file in the config folder
 
