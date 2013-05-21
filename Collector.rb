@@ -1,9 +1,9 @@
-require 'json'
+  require 'json'
   require 'net/http'
   require 'uri'
   require 'php_serialize'
 
-  require_relative 'settings'
+  require './config/settings'
 
   class Collector
 
