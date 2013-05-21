@@ -1,6 +1,6 @@
 # Rakefile
 
-require "Collector"
+require "./Collector"
 
 task :collect_all do
   collector = Collector.new
