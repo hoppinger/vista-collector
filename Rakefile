@@ -1,5 +1,4 @@
 # Rakefile
-require "sinatra/activerecord/rake"
 
 task :collect_all do
   collector = Collector.new
