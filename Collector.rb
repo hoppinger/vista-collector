@@ -30,9 +30,7 @@
     def collect_all
       all = Array.new
       Dir.glob("#{@@dir}**/wp-config.php").each do |wp_dir|
-        wp = wp_dir[0..-14]
-        wp = wp.gsub(@@dir, "")
-        wp = wp.gsub(@@folder + "/", "")
+        wp = wp_dir[0..-15].gsub(@@dir, "").gsub("/" + @@folder, "")
 
         data = gather(wp, true)
 
