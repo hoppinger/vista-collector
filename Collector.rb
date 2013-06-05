@@ -13,7 +13,6 @@
     @@host   = @config[:master_server]
     @@port   = @config[:master_server_port]
     @@server = @config[:client_name]
-    @@folder = @config[:wp_root_folder]
 
     unless @config[:htpasswd_user].empty?
       @@user = @config[:htpasswd_user] 
@@ -30,8 +29,7 @@
     def collect_all
       all = Array.new
       Dir.glob("#{@@dir}**/wp-config.php").each do |wp_dir|
-        wp = wp_dir[0..-15].gsub(@@dir, "").gsub("/" + @@folder, "")
-
+        wp = wp_dir[0..-15].sub!(@@dir, "")
         data = gather(wp, true)
 
         if (data != false)
@@ -47,20 +45,22 @@
       send_result(path_all, complete)
     end
 
-    def gather (website, extract)
+    def gather (website_folder, extract)
       if (extract)
-        data          = @@dir + website + "/" + @@folder
+        data          = @@dir + website_folder
         result        = `cd #{data} && wp plugin list --format=json`
+        name          = `cd #{data} && wp option get blogname`
         versionresult = `cd #{data} && wp core version --extra`
       end
 
       begin
         plugins       = JSON.parse(result)
+        blog_name     = name.split("\n").first
         versionresult = versionresult.split("\n")
         versionresult = versionresult[0].split("\t")
         version       = versionresult[1]
 
-        array  = { "name" => website, "version" => version, "plugins" => plugins }
+        array  = { "name" => website_folder, "blog_name" => blog_name,"version" => version, "plugins" => plugins }
       rescue
         array = false
       end
