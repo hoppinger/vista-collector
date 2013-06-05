@@ -51,15 +51,13 @@
         data          = @@dir + website_folder
         result        = `cd #{data} && wp plugin list --format=json`
         name          = `cd #{data} && wp option get blogname`
-        versionresult = `cd #{data} && wp core version --extra`
+        versionresult = `cd #{data} && wp core version`
       end
 
       begin
-        plugins       = JSON.parse(result)
-        blog_name     = name.split("\n").first
-        versionresult = versionresult.split("\n")
-        versionresult = versionresult[0].split("\t")
-        version       = versionresult[1]
+        plugins       = JSON.parse(sanitize(result, "plugin"))
+        blog_name     = sanitize(name, "blogname")
+        version       = sanitize(versionresult, "version")
 
         array  = { "name" => website_folder, "blog_name" => blog_name,"version" => version, "plugins" => plugins }
       rescue
@@ -67,6 +65,20 @@
       end
 
       array
+    end
+
+    def sanitize(result, type="plugin")
+      result = result.split("\n")
+      if (type === "plugin")
+        plugins = result.last
+        return plugins
+      elsif (type === "blogname")
+        blog_name = result.last
+        return blog_name
+      else
+        versionresult = result.last
+        return versionresult
+      end
     end
 
     def send_result (path, result)
