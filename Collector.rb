@@ -1,3 +1,4 @@
+  require 'highline/import'
   require 'json'
   require 'net/http'
   require 'uri'
@@ -35,7 +36,7 @@
         if (data != false)
           all.push(data)
         else
-          puts "#{wp} project has either database issues, or other PHP issues. Check your installation"
+          say("<%= color('Error:', :red) %> #{wp} project has either database issues, or other PHP issues. Check your installation")
         end
       end
 
