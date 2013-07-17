@@ -109,7 +109,10 @@ class Collector
       request.basic_auth @@user, @@pass
     end
     request.body = result.to_json
-    response     = Net::HTTP.new(@@host, @@port).start { |http| http.request(request) }
+    response     = Net::HTTP.new(@@host, @@port).start { |http|
+      http.read_timeout = 200
+      http.request(request)
+    }
   end
 
   def self.check_latest_wp_version
