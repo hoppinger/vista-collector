@@ -65,7 +65,7 @@ class Collector
       if (!output.empty?)
         plugins = JSON.parse(output)
       else
-        website_errors = [error]
+        website_errors << error
         say "<%= color('ERROR:', :red) %> #{error} for installation in <%= color('#{website_folder}', :red) %>"
       end
     end
@@ -88,7 +88,7 @@ class Collector
     end
 
     has_update = version == @wp_current_ver ? "none" : "available"
-    has_error  = !website_errors.empty?
+    has_errors = !website_errors.empty?
 
     array  = {
       "name"           => website_folder,
@@ -96,7 +96,7 @@ class Collector
       "has_update"     => has_update,
       "version"        => version,
       "plugins"        => plugins,
-      "has_error"      => has_error,
+      "has_errors"     => has_errors,
       "website_errors" => website_errors
     }
 
