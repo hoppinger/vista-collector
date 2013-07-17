@@ -1,3 +1,4 @@
+require 'popen4'
 require 'highline/import'
 require 'json'
 require 'net/http'
@@ -34,21 +35,9 @@ class Collector
     all = Array.new
     Dir.glob("#{@@dir}**/wp-config.php").each do |wp_dir|
       wp = wp_dir[0..-15].sub!(@@dir, "")
-      data = gather(wp, true)
+      data = gather(wp)
 
-      if (data != false)
-        all << data
-      else
-        say("<%= color('Error:', :red) %> #{wp} project has either database issues, or other PHP issues. Check your installation")
-
-        array  = {
-          "name"       => website_folder,
-          "blog_name"  => blog_name,
-          "has_update" => has_update,
-          "version"    => version,
-          "plugins"    => plugins
-        }
-      end
+      all << data
     end
 
     complete = {"server" => @@server, "data" => all}
@@ -57,54 +46,64 @@ class Collector
     send_result(path_all, complete)
   end
 
-  def gather (website_folder, extract)
-    if (extract)
-      data          = @@dir + website_folder
-      result        = `cd #{data} && wp plugin list --format=json 2> /dev/null`
-      name          = `cd #{data} && wp option get blogname 2> /dev/null`
-      versionresult = `cd #{data} && wp core version 2> /dev/null`
+  def gather (website_folder)
+    data          = @@dir + website_folder
+    cli_plugin    = "cd #{data} && wp plugin list --format=json"
+    cli_blogname  = "cd #{data} && wp option get blogname"
+    cli_version   = "cd #{data} && wp core version"
+
+    # Initialize the fields
+    website_errors = Array.new
+    plugins = Array.new
+    blog_name = ""
+    version = ""
+
+    # Call the command line to parse Wp-cli plugin data
+    status = POpen4.popen4(cli_plugin) do |stdout, stderr|
+      output = stdout.read
+      error  = stderr.read
+      if (!output.empty?)
+        plugins = JSON.parse(output)
+      else
+        website_errors = [error]
+        say "<%= color('ERROR:', :red) %> #{error} for installation in <%= color('#{website_folder}', :red) %>"
+      end
     end
 
-    begin
-      plugins       = JSON.parse(sanitize(result, "plugin"))
-      blog_name     = sanitize(name, "blogname")
-      version       = sanitize(versionresult, "version")
-      has_update    = version == @wp_current_ver ? "none" : "available"
-
-      array  = {
-        "name"       => website_folder,
-        "blog_name"  => blog_name,
-        "has_update" => has_update,
-        "version"    => version,
-        "plugins"    => plugins,
-        "has_errors"     => false
-      }
-    rescue
-      array  = {
-        "name"   => website_folder,
-        "has_errors" => true
-      }
+    # Call the command line to parse Wp-cli blog name
+    status = POpen4.popen4(cli_blogname) do |stdout, stderr|
+      output = stdout.read
+      if (!output.empty?)
+        blog_name = output
+        say "<%= color('PARSED SITE:', :green) %> #{blog_name}"
+      end
     end
 
-    array
-  end
-
-  def sanitize(result, type="plugin")
-    result = result.split("\n")
-    if (type === "plugin")
-      plugins = result.last
-      return plugins
-    elsif (type === "blogname")
-      blog_name = result.last
-      return blog_name
-    else
-      versionresult = result.last
-      return versionresult
+    # Call the command line to parse Wp-cli core version
+    status = POpen4.popen4(cli_version) do |stdout, stderr|
+      output = stdout.read
+      if (!output.empty?)
+        version = output
+      end
     end
+
+    has_update = version == @wp_current_ver ? "none" : "available"
+    has_error  = !website_errors.empty?
+
+    array  = {
+      "name"           => website_folder,
+      "blog_name"      => blog_name,
+      "has_update"     => has_update,
+      "version"        => version,
+      "plugins"        => plugins,
+      "has_error"      => has_error,
+      "website_errors" => website_errors
+    }
+
   end
 
   def send_result (path, result)
-    request      = Net::HTTP::Post.new(path, initheader = {'Content-Type' => 'application/json'})
+    request = Net::HTTP::Post.new(path, initheader = {'Content-Type' => 'application/json'})
     unless (@@user.nil? && @@pass.nil?)
       request.basic_auth @@user, @@pass
     end

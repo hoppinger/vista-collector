@@ -1,6 +1,7 @@
 # Gemfile
 source 'https://rubygems.org'
 
+gem "popen4"
 gem "highline"
 gem "php-serialize"
 gem "rake"
