@@ -8,38 +8,46 @@ require './config/settings'
 
 class Collector
 
-  @config = Settings.config
-  @@wp_current_ver = ""
+  def initialize
+    @wp_current_ver = Collector.check_latest_wp_version
+    @config = Settings.config
 
-  @@dir    = @config[:vhost_folders]
-  @@host   = @config[:master_server]
-  @@port   = @config[:master_server_port]
-  @@server = @config[:client_name]
+    @@dir    = @config[:vhost_folders]
+    @@host   = @config[:master_server]
+    @@port   = @config[:master_server_port]
+    @@server = @config[:client_name]
 
-  unless @config[:htpasswd_user].empty?
-    @@user = @config[:htpasswd_user] 
-  else
-    @@user = nil
-  end
+    unless @config[:htpasswd_user].empty?
+      @@user = @config[:htpasswd_user] 
+    else
+      @@user = nil
+    end
 
-  unless @config[:htpasswd_pass].empty?
-    @@pass = @config[:htpasswd_pass] 
-  else
-    @@pass = nil
+    unless @config[:htpasswd_pass].empty?
+      @@pass = @config[:htpasswd_pass] 
+    else
+      @@pass = nil
+    end
   end
 
   def collect_all
-    @wp_current_ver = Collector.check_latest_wp_version
-
     all = Array.new
     Dir.glob("#{@@dir}**/wp-config.php").each do |wp_dir|
       wp = wp_dir[0..-15].sub!(@@dir, "")
       data = gather(wp, true)
 
       if (data != false)
-        all.push(data)
+        all << data
       else
         say("<%= color('Error:', :red) %> #{wp} project has either database issues, or other PHP issues. Check your installation")
+
+        array  = {
+          "name"       => website_folder,
+          "blog_name"  => blog_name,
+          "has_update" => has_update,
+          "version"    => version,
+          "plugins"    => plugins
+        }
       end
     end
 
@@ -52,26 +60,30 @@ class Collector
   def gather (website_folder, extract)
     if (extract)
       data          = @@dir + website_folder
-      result        = `cd #{data} && wp plugin list --format=json`
-      name          = `cd #{data} && wp option get blogname`
-      versionresult = `cd #{data} && wp core version`
+      result        = `cd #{data} && wp plugin list --format=json 2> /dev/null`
+      name          = `cd #{data} && wp option get blogname 2> /dev/null`
+      versionresult = `cd #{data} && wp core version 2> /dev/null`
     end
 
     begin
       plugins       = JSON.parse(sanitize(result, "plugin"))
       blog_name     = sanitize(name, "blogname")
       version       = sanitize(versionresult, "version")
-      has_update    = version === @wp_current_ver ? "none" : "available"
+      has_update    = version == @wp_current_ver ? "none" : "available"
 
       array  = {
         "name"       => website_folder,
         "blog_name"  => blog_name,
         "has_update" => has_update,
         "version"    => version,
-        "plugins"    => plugins
+        "plugins"    => plugins,
+        "has_errors"     => false
       }
     rescue
-      array = false
+      array  = {
+        "name"   => website_folder,
+        "has_errors" => true
+      }
     end
 
     array
