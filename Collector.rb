@@ -53,39 +53,15 @@ class Collector
     cli_version   = "cd #{data} && wp core version"
 
     # Initialize the fields
-    website_errors = Array.new
-    plugins = Array.new
+    website_errors = []
+    plugins = []
     blog_name = ""
     version = ""
 
-    # Call the command line to parse Wp-cli plugin data
-    status = POpen4.popen4(cli_plugin) do |stdout, stderr|
-      output = stdout.read
-      error  = stderr.read
-      if (!output.empty?)
-        plugins = JSON.parse(output)
-      else
-        website_errors << error
-        say "<%= color('ERROR:', :red) %> #{error} for installation in <%= color('#{website_folder}', :red) %>"
-      end
-    end
-
-    # Call the command line to parse Wp-cli blog name
-    status = POpen4.popen4(cli_blogname) do |stdout, stderr|
-      output = stdout.read
-      if (!output.empty?)
-        blog_name = output
-        say "<%= color('PARSED SITE:', :green) %> #{blog_name}"
-      end
-    end
-
-    # Call the command line to parse Wp-cli core version
-    status = POpen4.popen4(cli_version) do |stdout, stderr|
-      output = stdout.read
-      if (!output.empty?)
-        version = output
-      end
-    end
+    # Call the command line to parse Wp-cli info
+    cli(cli_plugin, website_errors) { |output| plugins = JSON.parse(output.gsub('Array', ''))}
+    cli(cli_version, website_errors) { |output| version = output }
+    cli(cli_blogname, website_errors) { |output| blog_name = output}
 
     has_update = version == @wp_current_ver ? "none" : "available"
     has_errors = !website_errors.empty?
@@ -100,6 +76,19 @@ class Collector
       "website_errors" => website_errors
     }
 
+  end
+
+  def cli(command, website_errors)
+    status = POpen4.popen4(command) do |stdout, stderr|
+      output = stdout.read
+      error  = stderr.read
+      if (!output.empty?)
+        yield output.gsub("Array", "").chomp
+      else
+        website_errors << error
+        say "<%= color('ERROR:', :red) %> #{error} for installation in <%= color('#{website_folder}', :red) %>"
+      end
+    end
   end
 
   def send_result (path, result)
