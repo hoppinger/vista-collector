@@ -11,43 +11,43 @@ class Collector
 
   def initialize
     @wp_current_ver = Collector.check_latest_wp_version
-    @config = Settings.config
+    config = Settings.config
 
-    @@dir    = @config[:vhost_folders]
-    @@host   = @config[:master_server]
-    @@port   = @config[:master_server_port]
-    @@server = @config[:client_name]
+    @dir    = config[:vhost_folders]
+    @host   = config[:master_server]
+    @port   = config[:master_server_port]
+    @server = config[:client_name]
 
-    unless @config[:htpasswd_user].empty?
-      @@user = @config[:htpasswd_user] 
+    unless config[:htpasswd_user].empty?
+      @user = config[:htpasswd_user]
     else
-      @@user = nil
+      @user = nil
     end
 
-    unless @config[:htpasswd_pass].empty?
-      @@pass = @config[:htpasswd_pass] 
+    unless config[:htpasswd_pass].empty?
+      @pass = config[:htpasswd_pass]
     else
-      @@pass = nil
+      @pass = nil
     end
   end
 
   def collect_all
     all = Array.new
-    Dir.glob("#{@@dir}**/wp-config.php").each do |wp_dir|
-      wp = wp_dir[0..-15].sub!(@@dir, "")
+    Dir.glob("#{@dir}**/wp-config.php").each do |wp_dir|
+      wp = wp_dir[0..-15].sub!(@dir, "")
       data = gather(wp)
 
       all << data
     end
 
-    complete = {"server" => @@server, "data" => all}
+    complete = {"server" => @server, "data" => all}
 
     path_all = "/save-all"
     send_result(path_all, complete)
   end
 
   def gather (website_folder)
-    data          = @@dir + website_folder
+    data          = @dir + website_folder
     cli_plugin    = "cd #{data} && wp plugin list --format=json"
     cli_blogname  = "cd #{data} && wp option get blogname"
     cli_version   = "cd #{data} && wp core version"
@@ -104,11 +104,11 @@ class Collector
 
   def send_result (path, result)
     request = Net::HTTP::Post.new(path, initheader = {'Content-Type' => 'application/json'})
-    unless (@@user.nil? && @@pass.nil?)
-      request.basic_auth @@user, @@pass
+    unless (@user.nil? && @pass.nil?)
+      request.basic_auth @user, @pass
     end
     request.body = result.to_json
-    response     = Net::HTTP.new(@@host, @@port).start { |http|
+    response     = Net::HTTP.new(@host, @port).start { |http|
       http.read_timeout = 200
       http.request(request)
     }
