@@ -59,7 +59,7 @@ class Collector
     version = ""
 
     # Call the command line to parse Wp-cli info
-    cli(cli_plugin, website_errors) { |output| plugins = JSON.parse(output.gsub('Array', ''))}
+    cli(cli_plugin, website_errors) { |output| plugins = JSON.parse(output)}
     cli(cli_version, website_errors) { |output| version = output }
     cli(cli_blogname, website_errors) { |output| blog_name = output}
 
