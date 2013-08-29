@@ -6,8 +6,8 @@ module Settings
     :interval_unit      => "minute",            # For example "days", "week", "hour".
     :interval_quantity  => 10,                  # How often you want to run the info job based on your interval unit.
     :vhost_folders      => "/path/to/vhosts/",  # This point to your directory where all your project folders are located.
-    :htpasswd_user      => "",                  # The basic auth user.
-    :htpasswd_pass      => ""                   # The basic auth password.
+    :htpasswd_user      => nil,                 # The basic auth user.
+    :htpasswd_pass      => nil                  # The basic auth password.
   }
 
   def self.config
