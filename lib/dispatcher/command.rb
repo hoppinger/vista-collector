@@ -19,10 +19,13 @@ module Dispatcher
 
       begin
         if json
-          output.gsub!("\"update\"", "\"has_update\"")
+          output.gsub!('"update"', '"has_update"') # WP_CLI uses update, but that method is reserved by ActiveRecord
+          output.gsub!('"none"', 'false')     # WP_CLI uses "none", but we use Booleans
+          output.gsub!('"available"', 'true') # WP_CLI uses "available", but we use Booleans
           output = JSON.parse(output)
         end
       rescue JSON::ParserError
+        output = nil
         say("<%= color('[stderr:]', :red) %> Error parsing command #{cmds.join(' && ')}")
       end
 

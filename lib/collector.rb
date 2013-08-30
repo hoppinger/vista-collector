@@ -7,9 +7,9 @@ class Collector
   include Wordpress
 
   WP_CLI_COMMANDS = {
-    blog_name:            { cmd: 'wp option get blogname',       json: false },
-    version:              { cmd: 'wp core version',              json: false },
-    plugins_attributes:   { cmd: 'wp plugin list --format=json', json: true },
+    blog_name: { cmd: 'wp option get blogname',       json: false },
+    version:   { cmd: 'wp core version',              json: false },
+    plugins:   { cmd: 'wp plugin list --format=json', json: true },
   }
 
   attr_accessor :dir, :host, :port, :server, :user, :pass
@@ -52,13 +52,17 @@ class Collector
   #
   def prepare_wp_data(data, folder)
     has_update = data[:version][:stdout] == @wp_current_ver
+    has_errors = data[:plugins][:stdout].nil?
+    project_name = File.split(folder).first # Extract first folder name
 
     wp_data = {
       website: {
         website_errors: "",
-        name: folder,
+        name: project_name,
         has_update: has_update,
-      }
+        has_errors: has_errors,
+      },
+      plugins: data.delete(:plugins)[:stdout]
     }
 
     data.each do |type, cli_info|
