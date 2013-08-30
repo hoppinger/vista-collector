@@ -10,4 +10,5 @@ gem 'whenever', :require => false
 
 group :development do
   gem "tux"
+  gem "pry"
 end
