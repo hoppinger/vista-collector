@@ -29,7 +29,7 @@ class Collector
 
   def collect_single(folder)
     collected_info = {}
-    cd = "cd #{self.dir}#{folder}"
+    cd = "cd #{File.join(self.dir, folder)}"
     WP_CLI_COMMANDS.each do |type, sh|
       collected_info[type] = Dispatcher::Command.execute([cd, sh[:cmd]], sh[:json])
     end

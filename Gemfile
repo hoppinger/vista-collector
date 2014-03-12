@@ -12,3 +12,7 @@ group :development do
   gem "tux"
   gem "pry"
 end
+
+group :development, :test do
+  gem "rspec"
+end
