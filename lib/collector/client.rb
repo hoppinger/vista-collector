@@ -22,7 +22,6 @@ module Collector
     def collect_single(website)
       command = Collector::Command.new(website)
       command.blog_name; command.version; command.plugins
-      binding.pry
       request = Collector::Request.new(self.api_location,
         :user => @config[:htpasswd_user],
         :pass => @config[:htpasswd_pass])
