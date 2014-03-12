@@ -36,6 +36,7 @@ module Collector
       error  = nil
       cmd = block.call
 
+      say("<%= color('[stdout]:', :green) %> Parsing command '#{cmd}'")
       status = POpen4.popen4(cmd) do |stdout, stderr|
         output = stdout.read.strip
         error  = stderr.read.strip
@@ -53,7 +54,7 @@ module Collector
         info.gsub!('"available"', 'true')
         output = JSON.parse(info)
       rescue JSON::ParserError
-        say("<%= color('[stderr:]', :red) %> Error parsing json in #{current.dir}")
+        say("<%= color('[stderr]:', :red) %> Error parsing json in #{current.dir}")
         output = nil
       end
     end
