@@ -2,7 +2,7 @@ module Collector
   class Client
     include Collector
 
-    attr_accessor :websites
+    attr_accessor :websites, :wp_version
 
     def initialize
       load_settings
@@ -19,9 +19,10 @@ module Collector
       end
     end
 
-    def collect_single(website)
+    def collect_single(website, debug=false)
       command = Collector::Command.new(website)
       command.blog_name; command.version; command.plugins
+      return website if debug
       request = Collector::Request.new(self.api_location,
         :user => @config[:htpasswd_user],
         :pass => @config[:htpasswd_pass])
@@ -33,7 +34,7 @@ module Collector
     def api_location
       "http://#{@config[:master_server]}:" +
       "#{@config[:master_server_port]}/servers/" +
-      "#{@config[:client_name].underscore}/websites/save.json"
+      "#{@config[:client_name].underscore}/websites/create_or_update.json"
     end
   end
 end

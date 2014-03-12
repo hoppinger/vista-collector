@@ -10,9 +10,7 @@ require 'php_serialize'
 require 'pry'
 
 module Collector
-  included(self) do
-    attr_accessor :config
-  end
+  attr_reader :config
 
   def load_settings
     @config = Settings.config
@@ -42,4 +40,10 @@ module Collector
     result = PHP.unserialize(res.body)
     result['offers'].first['current']
   end
+end
+
+if __FILE__ == $0
+  client = Collector::Client.new
+  website = Collector::Website.new(client.config[:vhost_folders], 'tdior/httpdocs')
+  client.collect_single(website)
 end
