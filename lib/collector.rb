@@ -7,6 +7,7 @@ require './config/settings'
 require 'uri'
 require 'net/http'
 require 'php_serialize'
+require 'pry'
 
 module Collector
   included(self) do

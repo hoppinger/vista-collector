@@ -12,19 +12,19 @@ module Collector
 
     def blog_name
       @current.blog_name = execute do
-        "cd #{current.dir} && wp option get blogname"
+        "cd #{@current.path} && wp option get blogname"
       end
     end
 
     def version
       @current.version = execute do
-        "#cd {current.dir} && wp core version"
+        "cd #{@current.path} && wp core version"
       end
     end
 
     def plugins
       plugin_info = execute do
-        "cd #{current.dir} && wp plugin list --format=json"
+        "cd #{@current.path} && wp plugin list --format=json"
       end
       @current.plugins = json_parse(plugin_info)
     end
@@ -46,12 +46,12 @@ module Collector
     def json_parse(info)
       begin
         # WP_CLI uses update, but that method is reserved by ActiveRecord
-        output.gsub!('"update"', '"has_update"')
+        info.gsub!('"update"', '"has_update"')
         # WP_CLI uses "none", but we use Booleans
-        output.gsub!('"none"', 'false')
+        info.gsub!('"none"', 'false')
         # WP_CLI uses "available", but we use Booleans
-        output.gsub!('"available"', 'true')
-        output = JSON.parse(output)
+        info.gsub!('"available"', 'true')
+        output = JSON.parse(info)
       rescue JSON::ParserError
         say("<%= color('[stderr:]', :red) %> Error parsing json in #{current.dir}")
         output = nil

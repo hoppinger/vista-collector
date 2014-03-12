@@ -1,10 +1,15 @@
 module Collector
   class Website
 
-    attr_accessor :dir, :blog_name, :version, :plugins
+    attr_accessor :vhost, :dir, :blog_name, :version, :plugins
 
-    def initialize(dir)
+    def initialize(vhost, dir)
+      @vhost = vhost
       @dir = dir
+    end
+
+    def path
+      File.join(@vhost, @dir)
     end
 
     def has_update(newest_ver)
