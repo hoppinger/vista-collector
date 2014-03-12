@@ -12,6 +12,10 @@ module Collector
       File.join(@vhost, @dir)
     end
 
+    def project_name
+      File.split(@dir).first
+    end
+
     def has_update(newest_ver)
       newest_ver != version
     end
@@ -22,10 +26,13 @@ module Collector
 
     def to_hash(newest_ver)
       {
-        name: blog_name,
-        has_update: has_update(newest_ver),
-        has_errors: has_errors,
-        plugins: plugins,
+        website: {
+          name: project_name,
+          blog_name: blog_name,
+          has_update: has_update(newest_ver),
+          has_errors: has_errors,
+          plugins: plugins,
+        }
       }
     end
 
