@@ -15,10 +15,10 @@ module Collector
       plugins.nil? || plugins.empty?
     end
 
-    def to_hash
+    def to_hash(newest_ver)
       {
         name: blog_name,
-        has_update: has_update,
+        has_update: has_update(newest_ver),
         has_errors: has_errors,
         plugins: plugins,
       }

@@ -4,19 +4,20 @@ require 'highline/import'
 
 module Collector
   class Command
+    attr_accessor :current
 
-    included do
-      attr_accessor :current
+    def initialize(current)
+      @current = current
     end
 
     def blog_name
-      current.blog_name = execute do
+      @current.blog_name = execute do
         "cd #{current.dir} && wp option get blogname"
       end
     end
 
     def version
-      current.version = execute do
+      @current.version = execute do
         "#cd {current.dir} && wp core version"
       end
     end
@@ -25,7 +26,7 @@ module Collector
       plugin_info = execute do
         "cd #{current.dir} && wp plugin list --format=json"
       end
-      current.plugins = json_parse(plugin_info)
+      @current.plugins = json_parse(plugin_info)
     end
 
     private
