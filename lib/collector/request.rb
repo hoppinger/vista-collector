@@ -1,8 +1,8 @@
-module Dispatcher
+require 'net/http'
+require 'uri'
 
+module Collector
   class Request
-    require 'net/http'
-    require 'uri'
 
     def initialize(location, options = {})
       validate_uri(location)
@@ -18,7 +18,8 @@ module Dispatcher
     #
     def send(result)
       uri = URI(@location)
-      request = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' => 'application/json'})
+      request = Net::HTTP::Post.new(uri.path,
+        initheader = {'Content-Type' => 'application/json'})
       request = prepare_basic_auth(request)
 
       request.body = result.to_json
@@ -53,5 +54,4 @@ module Dispatcher
     end
 
   end
-
 end
