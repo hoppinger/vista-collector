@@ -20,7 +20,7 @@ module Collector
     wp_directories = []
     glob_dir = File.join(@config[:vhost_folders], "")
     Dir.glob("#{glob_dir}**/wp-config.php").each do |wp_config_file|
-      wp_directories << File.dirname(wp_config_file).gsub(@config[:vhost_folders], "")
+      wp_directories << File.dirname(wp_config_file).gsub(glob_dir, "")
     end
 
     wp_directories

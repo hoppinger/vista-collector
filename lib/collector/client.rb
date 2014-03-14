@@ -14,7 +14,7 @@ module Collector
       installs = find_wordpress_installs
 
       installs.each do |wp_install|
-        website = Collector::Website.new(wp_install)
+        website = Collector::Website.new(@config[:vhost_folders], wp_install)
         @websites << website
         result = self.collect_single(website)
       end

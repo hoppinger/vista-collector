@@ -20,3 +20,8 @@ end
 Given /^its vhost folder is set correct$/ do
   @client.config[:vhost_folders] = File.expand_path("../../../", __FILE__)
 end
+
+Given /^there is a plugin "([^"]+)"$/ do |plugin_name|
+  install_dir = File.expand_path("../../../download", __FILE__)
+  `cd #{install_dir} && wp plugin scaffold #{plugin_name}`
+end
