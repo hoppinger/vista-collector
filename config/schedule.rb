@@ -1,7 +1,7 @@
 env :PATH, ENV['PATH']
 
 require './config/settings'
-require './Collector'
+require './lib/collector'
 
 interval = Settings.config[:interval_quantity]
 unit     = Settings.config[:interval_unit]
