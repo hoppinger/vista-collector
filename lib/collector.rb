@@ -9,9 +9,7 @@ require 'net/http'
 require 'php_serialize'
 
 module Collector
-  included(self) do
-    attr_accessor :config
-  end
+  attr_accessor :config
 
   def load_settings
     @config = Settings.config
@@ -19,7 +17,8 @@ module Collector
 
   def find_wordpress_installs
     wp_directories = []
-    Dir.glob("#{@config[:vhost_folders]}**/wp-config.php").each do |wp_config_file|
+    glob_dir = File.join(@config[:vhost_folders], "")
+    Dir.glob("#{glob_dir}**/wp-config.php").each do |wp_config_file|
       wp_directories << File.dirname(wp_config_file).gsub(@config[:vhost_folders], "")
     end
 

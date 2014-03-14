@@ -2,7 +2,7 @@ module Collector
   class Client
     include Collector
 
-    attr_accessor :websites
+    attr_accessor :websites, :wp_version
 
     def initialize
       load_settings
@@ -15,6 +15,7 @@ module Collector
 
       installs.each do |wp_install|
         website = Collector::Website.new(wp_install)
+        @websites << website
         result = self.collect_single(website)
       end
     end
@@ -22,12 +23,18 @@ module Collector
     def collect_single(website)
       command = Collector::Command.new(website)
       command.blog_name; command.version; command.plugins
+    end
+
+    def send_data
       request = Collector::Request.new(self.api_location,
         :user => config[:htpasswd_user],
         :pass => config[:htpasswd_pass])
-      request.send(website.to_hash(@wp_version).merge({
-        server: config[:client_name].underscore,
-      }))
+
+      @websites.each do |website|
+        request.send(website.to_hash(@wp_version).merge({
+          server: config[:client_name].underscore,
+        }))
+      end
     end
 
     def api_location
