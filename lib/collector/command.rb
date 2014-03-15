@@ -41,7 +41,7 @@ module Collector
         output = stdout.read.strip
         error  = stderr.read.strip
       end
-      output
+      output.split("\n").last
     end
 
     def json_parse(info)
