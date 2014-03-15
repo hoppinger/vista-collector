@@ -40,7 +40,7 @@ module Collector
     def api_location
       "http://#{config[:master_server]}:" +
       "#{config[:master_server_port]}/servers/" +
-      "#{config[:client_name].underscore}/websites/save.json"
+      "#{config[:client_name].underscore}/websites/create_or_update.json"
     end
   end
 end
