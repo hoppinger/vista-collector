@@ -42,9 +42,3 @@ module Collector
     result['offers'].first['current']
   end
 end
-
-if __FILE__ == $0
-  client = Collector::Client.new
-  website = Collector::Website.new(client.config[:vhost_folders], 'tdior/httpdocs')
-  client.collect_single(website)
-end
