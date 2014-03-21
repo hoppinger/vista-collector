@@ -13,8 +13,11 @@ module Collector
     end
 
     def project_name
-      name = File.split(@dir).first
-      File.split(@dir).last if name == "."
+      if File.split(@dir).include?(".")
+        File.split(@dir).last
+      else
+        File.split(@dir).first
+      end
     end
 
     def has_update(newest_ver)
