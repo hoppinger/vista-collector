@@ -22,7 +22,12 @@ module Collector
 
     def collect_single(website)
       command = Collector::Command.new(website)
-      command.blog_name; command.version; command.plugins
+      begin
+        command.blog_name; command.version; command.plugins
+        true
+      rescue
+        false
+      end
     end
 
     def send_data
