@@ -3,7 +3,12 @@ require './lib/collector/client'
 require './lib/collector/command'
 require './lib/collector/request'
 require './lib/collector/website'
+require './lib/collector/wordpress/client'
+require './lib/collector/wordpress/command'
+require './lib/collector/drupal/client'
+require './lib/collector/drupal/command'
 require './config/settings'
+require 'find'
 require 'uri'
 require 'net/http'
 require 'php_serialize'
@@ -16,14 +21,24 @@ module Collector
     @config = Settings.config
   end
 
-  def find_wordpress_installs
-    wp_directories = []
+  def find_installs matches
+    directories = []
     glob_dir = File.join(@config[:vhost_folders], "")
-    Dir.glob("#{glob_dir}**/wp-config.php").each do |wp_config_file|
-      wp_directories << File.dirname(wp_config_file).gsub(glob_dir, "")
+    Find.find(glob_dir) do |path|
+      if FileTest.directory?(path)
+        begin
+          if (Dir.entries(path) & matches).size == matches.size
+            directories << path.gsub(glob_dir, "")
+            Find.prune
+          else
+            next
+          end
+        rescue Errno::EACCES
+          next
+        end
+      end
     end
-
-    wp_directories
+    directories
   end
 
   def check_latest_wp_version

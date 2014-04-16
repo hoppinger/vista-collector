@@ -2,31 +2,16 @@ module Collector
   class Client
     include Collector
 
-    attr_accessor :websites, :wp_version
+    attr_accessor :version, :websites
 
     def initialize
       load_settings
       @websites = []
-      @wp_version = check_latest_wp_version
     end
 
-    def collect_all
-      installs = find_wordpress_installs
-
-      installs.each do |wp_install|
-        website = Collector::Website.new(@config[:vhost_folders], wp_install)
+    def add_website(website)
+      if @websites.select{ |s| s.blog_name == website.blog_name}.empty?
         @websites << website
-        result = self.collect_single(website)
-      end
-    end
-
-    def collect_single(website)
-      command = Collector::Command.new(website)
-      begin
-        command.blog_name; command.version; command.plugins
-        true
-      rescue
-        false
       end
     end
 
@@ -36,7 +21,7 @@ module Collector
         :pass => config[:htpasswd_pass])
 
       @websites.each do |website|
-        request.send(website.to_hash(@wp_version).merge({
+        request.send(website.to_hash(@version).merge({
           server: config[:client_name].underscore,
         }))
       end
