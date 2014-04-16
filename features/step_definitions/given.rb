@@ -13,8 +13,8 @@ Given /^there are default settings$/ do
   FileUtils.copy(file, File.expand_path("../settings.rb", file))
 end
 
-Given /^there is a Collector$/ do
-  @client = Collector::Client.new
+Given /^there is a Wordpress Collector$/ do
+  @client = Collector::Wordpress::Client.new
 end
 
 Given /^its vhost folder is set correct$/ do

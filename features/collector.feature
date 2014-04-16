@@ -1,7 +1,7 @@
 Feature: Manage Wordpress Installations
   Background:
     Given there are default settings
-    And there is a Collector
+    And there is a Wordpress Collector
     And its vhost folder is set correct
 
     Scenario: WP download
