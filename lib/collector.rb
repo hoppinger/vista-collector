@@ -28,7 +28,8 @@ module Collector
       if FileTest.directory?(path)
         begin
           if (Dir.entries(path) & matches).size == matches.size
-            directories << path.gsub(glob_dir, "")
+            folder = path.gsub(glob_dir, "")
+            add_directory(directories, folder)
             Find.prune
           else
             next
@@ -39,6 +40,13 @@ module Collector
       end
     end
     directories
+  end
+
+  def add_directory(directories, path)
+    target = Pathname(path).each_filename.to_a.first
+    if directories.select{|s| Pathname(s).each_filename.to_a.first == target}.empty?
+      directories << path
+    end
   end
 
   def check_latest_wp_version
