@@ -1,7 +1,7 @@
 module Collector
   class Website
 
-    attr_accessor :vhost, :dir, :blog_name, :version, :plugins
+    attr_accessor :vhost, :dir, :blog_name, :version, :plugins, :type
 
     def initialize(vhost, dir)
       @vhost = vhost
@@ -37,6 +37,7 @@ module Collector
           has_update: has_update(newest_ver),
           has_errors: has_errors,
           plugins: plugins,
+          type: type,
         }
       }
     end
