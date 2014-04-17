@@ -13,7 +13,7 @@ module Collector
 
         installs.each do |wp_install|
           website = Collector::Website.new(@config[:vhost_folders], wp_install)
-          add_website(website)
+          @websites << website
           result = self.collect_single(website)
         end
       end

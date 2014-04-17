@@ -9,12 +9,6 @@ module Collector
       @websites = []
     end
 
-    def add_website(website)
-      if @websites.select{ |s| s.blog_name == website.blog_name}.empty?
-        @websites << website
-      end
-    end
-
     def send_data
       request = Collector::Request.new(self.api_location,
         :user => config[:htpasswd_user],
