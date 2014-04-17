@@ -37,7 +37,7 @@ module Collector
           has_update: has_update(newest_ver),
           has_errors: has_errors,
           plugins: plugins,
-          type: type,
+          cms_type: type,
         }
       }
     end
