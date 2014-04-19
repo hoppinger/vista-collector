@@ -3,18 +3,14 @@ module Collector
 
     class Client < Collector::Client
 
-      def collect_all
-        installs = find_drupal_installs
+      CMS_TYPE = :drupal
 
-        installs.each do |wp_install|
-          website = Collector::Website.new(@config[:vhost_folders], wp_install)
-          @websites << website
-          result = self.collect_single(website)
-        end
+      def initialize
+        super
       end
 
-      def find_drupal_installs
-        dp_directories = find_installs ["modules", "sites"]
+      def find_client_installs
+        find_installs ["modules", "sites"]
       end
 
       def collect_single(website)

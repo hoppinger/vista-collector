@@ -3,23 +3,15 @@ module Collector
 
     class Client < Collector::Client
 
+      CMS_TYPE = :wordpress
+
       def initialize
         super
         @version = check_latest_wp_version
       end
 
-      def collect_all
-        installs = find_wordpress_installs
-
-        installs.each do |wp_install|
-          website = Collector::Website.new(@config[:vhost_folders], wp_install)
-          @websites << website
-          result = self.collect_single(website)
-        end
-      end
-
-      def find_wordpress_installs
-        wp_directories = find_installs ["wp-config.php"]
+      def find_client_installs
+        find_installs ["wp-config.php"]
       end
 
       def collect_single(website)

@@ -9,6 +9,20 @@ module Collector
       @websites = []
     end
 
+    def find_client_installs
+      MethodNotImplementedError.new "Please implement this method"
+    end
+
+    def collect_all
+      installs = find_client_installs
+
+      installs.each do |install|
+        website = Collector::Website.new(@config[:vhost_folders], install)
+        @websites << website
+        collect_single(website)
+      end
+    end
+
     def send_data
       request = Collector::Request.new(self.api_location,
         :user => config[:htpasswd_user],
@@ -28,3 +42,5 @@ module Collector
     end
   end
 end
+
+class MethodNotImplementedError < Exception; end
