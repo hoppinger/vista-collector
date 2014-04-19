@@ -19,9 +19,8 @@ module Collector
         website.type = :wordpress
         begin
           command.blog_name; command.version; command.plugins
-          true
         rescue
-          false
+          website.nullify
         end
       end
 

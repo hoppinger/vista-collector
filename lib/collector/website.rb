@@ -1,7 +1,8 @@
 module Collector
   class Website
 
-    attr_accessor :vhost, :dir, :blog_name, :version, :plugins, :type
+    attr_accessor :vhost, :dir, :blog_name, :version, :plugins,
+      :type, :errors
 
     def initialize(vhost, dir)
       @vhost = vhost
@@ -24,8 +25,23 @@ module Collector
       newest_ver != version
     end
 
+    # Project contains errors, that will have leaked into the parsed results
+    # like the @blog_name. We copy these errors to the @errors instance variable
+    # to be collected along
+    def nullify
+      @errors = @blog_name
+      @blog_name = nil
+      @version = nil
+      @plugins = nil
+    end
+
     def has_errors
-      plugins.nil? || plugins.empty?
+      if plugins.nil? || plugins.empty?
+        nullify
+        true
+      else
+        false
+      end
     end
 
     def to_hash(newest_ver)
@@ -36,6 +52,7 @@ module Collector
           blog_name: blog_name,
           has_update: has_update(newest_ver),
           has_errors: has_errors,
+          website_errors: errors,
           plugins: plugins,
           cms_type: type,
         }

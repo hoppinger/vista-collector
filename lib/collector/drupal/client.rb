@@ -18,9 +18,8 @@ module Collector
         website.type = :drupal
         begin
           command.blog_name; command.version; command.plugins
-          true
         rescue
-          false
+          website.nullify
         end
       end
 
