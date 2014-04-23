@@ -19,12 +19,10 @@ module Collector
 
     def json_parse(info)
       begin
-        # WP_CLI uses update, but that method is reserved by ActiveRecord
         info.gsub!('"update"', '"has_update"')
-        # WP_CLI uses "none", but we use Booleans
         info.gsub!('"none"', 'false')
-        # WP_CLI uses "available", but we use Booleans
         info.gsub!('"available"', 'true')
+        info.gsub!('"security"', 'true')
         output = JSON.parse(info)
       rescue JSON::ParserError
         say("<%= color('[stderr]:', :red) %> Error parsing json in #{current.dir}")
