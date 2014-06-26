@@ -24,6 +24,11 @@ Proceed to set up the settings file in the config folder
 
     cd config/
     cp example-settings.rb settings.rb
+    
+If you enable predefined lists, then copy the example-directories.json
+
+    cd config/
+    cp example-directories.json directories.json
 
 **It has to be called `settings.rb` because that's what the `collector.rb` clients will be looking for.**
 
