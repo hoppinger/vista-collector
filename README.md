@@ -1,11 +1,13 @@
 # WP Vista Collector
 The Collector is a Ruby script. It is the client which persists the Wordpress plugin and core data to a Master Server.
-To collect the Wordpress data, the app uses [WP-CLI](https://github.com/wp-cli/wp-cli), so be sure to install that first on your servers.
+To collect the Wordpress/Drupal data, the app uses [WP-CLI](https://github.com/wp-cli/wp-cli) and [Drush](https://www.drupal.org/project/drush), so be sure to install that first on your servers.
 
 ## Requirements
 
-* WP-CLI >= master
 * Ruby >= 1.9.3
+* WP-CLI >= master
+* Drush
+* Vista Drush
 
 ## Installation Clients
 You put the Clients on a server with Wordpress projects. You set up the cron job (which is a single command), and they will run on the intervals you set up.
@@ -38,7 +40,9 @@ Then you can run the cucumber tests:
     bundle exec cucumber
 
 ### The operation can take a lot of time
-The actual gathering of data using WP-CLI takes a lot of time, as it has to query multiple requests to the Wordpress.org repository to find out of the plugins need an update or not. So the rules are simple: the more websites you have running in your directory, the longer it will take. It usually takes around 3 seconds per website to gather the data.
+The actual fetching of data using WP-CLI takes a lot of time, as it has to query multiple requests to the Wordpress.org repository to find out of the plugins need an update or not. So the rules are simple: the more websites you have running in your directory, the longer it will take. It usually takes around 3 seconds per website to gather the data.
+
+The Drupal data fetching takes even more time. It's estimated that an average website, with about 20 modules, takes a full minute.
 
 ### Setup the cron job for Clients
 Of course, you want the clients to work autonomously. This is done by setting up a cron job. The gem `whenever` is used for this. The `whenever` gem will setup your crontab with values in your `settings.rb` intervals.
