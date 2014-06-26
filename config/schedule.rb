@@ -8,7 +8,7 @@ interval = Settings.config[:interval_quantity]
 unit     = Settings.config[:interval_unit]
 
 every interval.send(unit) do
-  cms.each do |cms_type|
-    Thread.new { rake "#{cms_type}:collect_all" }
+  [cms].flatten.each do |cms_type|
+    rake "#{cms_type}:collect_all"
   end
 end
