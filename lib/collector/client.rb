@@ -13,16 +13,28 @@ module Collector
       MethodNotImplementedError.new "Please implement this method"
     end
 
-    # Loop over all website folders and execute their commands to parse
-    # the results.
     def collect_all
-      installs = find_client_installs
+      if @config[:predefined_list?]
+        # Parse the predefined list and use those instead.
+        file = JSON.parse(open_predefined_list)
+        # Use the client's CMS type.
+        installs = file[self.class::CMS_TYPE.to_s]
+      else
+        # Loop over all website folders and execute their commands to parse
+        # the results.
+        installs = find_client_installs
+      end
 
       installs.each do |install|
         website = Collector::Website.new(@config[:vhost_folders], install)
         @websites << website
         collect_single(website)
       end
+    end
+
+    def open_predefined_list
+      location = File.expand_path("../../../config/directories.json", __FILE__)
+      File.read(location)
     end
 
     # Send data of all parsed websites and return all their
