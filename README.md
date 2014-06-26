@@ -7,7 +7,7 @@ To collect the Wordpress/Drupal data, the app uses [WP-CLI](https://github.com/w
 * Ruby >= 1.9.3
 * WP-CLI >= master
 * Drush
-* Vista Drush
+* [Vista Drush](https://github.com/tolgap/drush-vista)
 
 ## Installation Clients
 You put the Clients on a server with Wordpress projects. You set up the cron job (which is a single command), and they will run on the intervals you set up.
