@@ -4,6 +4,7 @@ require 'highline/import'
 module Collector
   class Command
 
+    # Perform a command line process and read it's output.
     def execute(&block)
       output = nil
       error  = nil
@@ -17,6 +18,8 @@ module Collector
       output.split("\n").last
     end
 
+    # JSON output consists of keywords that are not used 1:1. These
+    # are converted to correct boolean values and method definitions.
     def json_parse(info)
       begin
         info.gsub!('"update"', '"has_update"')

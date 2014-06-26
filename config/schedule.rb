@@ -7,6 +7,7 @@ cms      = Settings.config[:cms]
 interval = Settings.config[:interval_quantity]
 unit     = Settings.config[:interval_unit]
 
+# Run a rake task for every CMS configured
 every interval.send(unit) do
   [cms].flatten.each do |cms_type|
     rake "#{cms_type}:collect_all"

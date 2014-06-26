@@ -44,6 +44,7 @@ module Collector
       end
     end
 
+    # One to one mapping for a Rails model
     def to_hash(newest_ver)
       {
         website: {

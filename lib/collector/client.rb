@@ -13,6 +13,8 @@ module Collector
       MethodNotImplementedError.new "Please implement this method"
     end
 
+    # Loop over all website folders and execute their commands to parse
+    # the results.
     def collect_all
       installs = find_client_installs
 
@@ -23,6 +25,8 @@ module Collector
       end
     end
 
+    # Send data of all parsed websites and return all their
+    # API responses as an array.
     def send_data
       request = Collector::Request.new(self.api_location,
         :user => config[:htpasswd_user],

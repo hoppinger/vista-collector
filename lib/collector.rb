@@ -21,6 +21,11 @@ module Collector
     @config = Settings.config
   end
 
+  # Find installations based on matches set in the Client classes
+  # The Find Module can match a directory and prune it, so it backs
+  # out of the directory and does not keep recursing on it.
+  # It is much more efficient than just recursing further over it once you've
+  # matched your installation.
   def find_installs matches
     directories = []
     glob_dir = File.join(@config[:vhost_folders], "")
@@ -42,26 +47,13 @@ module Collector
     directories
   end
 
+  # Add the target path of your installation to your directories.
+  # If you somehow have a releases folder and a current folder, this will
+  # filter out the most current one.
   def add_directory(directories, path)
     target = Pathname(path).each_filename.to_a.first
     if directories.select{|s| Pathname(s).each_filename.to_a.first == target}.empty?
       directories << path
     end
-  end
-
-  def check_latest_wp_version
-    url = URI.parse('http://api.wordpress.org/core/version-check/1.6')
-    r = Net::HTTP.get_response(url)
-    if r.code == "301"
-        url = URI.parse(r.header['location'])
-    end
-
-    req = Net::HTTP::Get.new(url.path)
-    res = Net::HTTP.start(url.host, url.port) do |http|
-      http.request(req)
-    end
-
-    result = PHP.unserialize(res.body)
-    result['offers'].first['current']
   end
 end
