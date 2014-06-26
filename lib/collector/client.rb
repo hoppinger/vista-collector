@@ -28,7 +28,7 @@ module Collector
         :user => config[:htpasswd_user],
         :pass => config[:htpasswd_pass])
 
-      @websites.each do |website|
+      @websites.map do |website|
         request.send(website.to_hash(@version).merge({
           server: config[:client_name].underscore,
         }))
