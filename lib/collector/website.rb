@@ -7,6 +7,7 @@ module Collector
     def initialize(vhost, dir)
       @vhost = vhost
       @dir = dir
+      @errors = []
     end
 
     def path
@@ -25,23 +26,17 @@ module Collector
       newest_ver != version
     end
 
-    # Project contains errors, that will have leaked into the parsed results
-    # like the @blog_name. We copy these errors to the @errors instance variable
-    # to be collected along
+    # Project contains errors. We nullify the fields.
     def nullify
-      @errors = @blog_name
       @blog_name = nil
       @version = nil
       @plugins = nil
     end
 
     def has_errors
-      if plugins.nil? || plugins.empty?
-        nullify
-        true
-      else
-        false
-      end
+      @errors.any? do |error|
+        error.include?("Fatal error") || error.include?("Exception")
+      end || @plugins.nil?
     end
 
     # One to one mapping for a Rails model

@@ -12,22 +12,24 @@ module Collector
       end
 
       def blog_name
-        @current.blog_name = execute do
-          "cd #{@current.path} && wp option get blogname"
+        execute("cd #{@current.path} && wp option get blogname") do |output, error|
+          @current.errors << error unless error.nil?
+          @current.blog_name = output
         end
       end
 
       def version
-        @current.version = execute do
-          "cd #{@current.path} && wp core version"
+        execute("cd #{@current.path} && wp core version") do |output, error|
+          @current.errors << error unless error.nil?
+          @current.version = output
         end
       end
 
       def plugins
-        plugin_info = execute do
-          "cd #{@current.path} && wp plugin list --format=json"
+        execute("cd #{@current.path} && wp plugin list --format=json") do |output, error|
+          @current.errors << error unless error.nil?
+          @current.plugins = json_parse(output)
         end
-        @current.plugins = json_parse(plugin_info)
       end
 
     end
