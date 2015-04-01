@@ -12,22 +12,24 @@ module Collector
       end
 
       def blog_name
-        @current.blog_name = execute do
-          "cd #{@current.path} && drush vista-n"
+        execute("cd #{@current.path} && drush vista-n") do |output, error|
+          @current.errors << error unless error.nil?
+          @current.blog_name = output
         end
       end
 
       def version
-        @current.version = execute do
-          "cd #{@current.path} && drush vista-cv"
+        execute("cd #{@current.path} && drush vista-cv") do |output, error|
+          @current.errors << error unless error.nil?
+          @current.version = output
         end
       end
 
       def plugins
-        plugin_info = execute do
-          "cd #{@current.path} && drush vista-m"
+        execute("cd #{@current.path} && drush vista-m") do |output, error|
+          @current.errors << error unless error.nil?
+          @current.plugins = json_parse(output)
         end
-        @current.plugins = json_parse(plugin_info)
       end
 
     end

@@ -5,17 +5,14 @@ module Collector
   class Command
 
     # Perform a command line process and read it's output.
-    def execute(&block)
+    def execute(cmd, &block)
       output = nil
       error  = nil
-      cmd = block.call
 
       say("<%= color('[stdout]:', :green) %> Parsing command '#{cmd}'")
       status = POpen4.popen4(cmd) do |stdout, stderr|
-        output = stdout.read.strip
-        error  = stderr.read.strip
+        yield(stdout.read.strip, stderr.read.strip)
       end
-      output.split("\n").last
     end
 
     # JSON output consists of keywords that are not used 1:1. These
@@ -34,4 +31,6 @@ module Collector
     end
 
   end
+
+  class WpCliErrorException < Exception; end;
 end

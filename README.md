@@ -7,7 +7,7 @@ To collect the Wordpress/Drupal data, the app uses [WP-CLI](https://github.com/w
 * Ruby >= 1.9.3
 * WP-CLI >= master
 * Drush
-* Vista Drush
+* [Vista Drush](https://github.com/tolgap/drush-vista)
 
 ## Installation Clients
 You put the Clients on a server with Wordpress projects. You set up the cron job (which is a single command), and they will run on the intervals you set up.
@@ -24,6 +24,11 @@ Proceed to set up the settings file in the config folder
 
     cd config/
     cp example-settings.rb settings.rb
+    
+If you enable predefined lists, then copy the example-directories.json
+
+    cd config/
+    cp example-directories.json directories.json
 
 **It has to be called `settings.rb` because that's what the `collector.rb` clients will be looking for.**
 
