@@ -29,11 +29,32 @@ module Collector
       path = "#{node.content}/#{file_path}"
       child_node = Tree::TreeNode.new(file_path, path)
       node << child_node
-      if FileTest.directory?(path)
-        build_directory_tree(child_node)
+      begin
+        if FileTest.directory?(path)
+          build_directory_tree(child_node)
+        end
+      rescue Errno::EACCES
+        next
       end
     end
     node
+  end
+
+  # [{type, path}]
+  def get_websites_from node
+    type = get_folder_type node
+    if type
+      return [{
+        :type => type,
+        :path => node.content,
+      }]
+    else
+      childs = []
+      node.children.each do |child|
+        childs += get_websites_from child
+      end
+      return childs
+    end
   end
 
   # Find installations based on matches set in the Client classes
@@ -42,7 +63,9 @@ module Collector
   # It is much more efficient than just recursing further over it once you've
   # matched your installation.
   def find_installs matches
-    # tree = build_directory_tree Tree::TreeNode.new "ROOT", @config[:vhost_folders]
+    #tree = build_directory_tree Tree::TreeNode.new "ROOT", @config[:vhost_folders]
+    #websites = get_websites_from tree
+
     directories = []
     glob_dir = File.join(@config[:vhost_folders], "")
     Find.find(glob_dir) do |path|
@@ -61,6 +84,30 @@ module Collector
       end
     end
     directories
+  end
+
+  def get_folder_type node
+
+    children = node.children.map do |child|
+      child.name
+    end
+
+    @config[:cms].each do |cms, match_sets|
+      match_sets.each do |match_set|
+        #["sites", "modules", "themes", "web.config"]
+
+        matches = match_set.map do |match|
+          children.include?(match)
+        end
+
+        if !matches.include?(false)
+          return cms
+        end
+
+      end
+    end
+
+    false
   end
 
   # Add the target path of your installation to your directories.
