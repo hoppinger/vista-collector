@@ -63,26 +63,15 @@ module Collector
   # It is much more efficient than just recursing further over it once you've
   # matched your installation.
   def find_installs matches
-    #tree = build_directory_tree Tree::TreeNode.new "ROOT", @config[:vhost_folders]
-    #websites = get_websites_from tree
+    tree = build_directory_tree Tree::TreeNode.new "ROOT", @config[:vhost_folders]
+    websites = get_websites_from tree
 
-    directories = []
-    glob_dir = File.join(@config[:vhost_folders], "")
-    Find.find(glob_dir) do |path|
-      if FileTest.directory?(path)
-        begin
-          if (Dir.entries(path) & matches).size == matches.size
-            folder = path.gsub(glob_dir, "")
-            add_directory(directories, folder)
-            Find.prune
-          else
-            next
-          end
-        rescue Errno::EACCES
-          next
-        end
+    directories = websites.map do |website|
+      if website[:type] == self.class::CMS_TYPE
+        website[:path]
       end
-    end
+    end.compact!
+
     directories
   end
 

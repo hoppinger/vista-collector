@@ -11,7 +11,7 @@ module Collector
     end
 
     def path
-      File.join(@vhost, @dir)
+      @dir
     end
 
     def project_name
