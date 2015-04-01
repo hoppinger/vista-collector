@@ -9,6 +9,7 @@ require './lib/collector/drupal/client'
 require './lib/collector/drupal/command'
 require './config/settings'
 require 'find'
+require 'tree'
 require 'uri'
 require 'net/http'
 require 'php_serialize'
@@ -21,12 +22,27 @@ module Collector
     @config = Settings.config
   end
 
+  def build_directory_tree node
+    return if node.node_depth > @config[:max_depth]
+    Dir.foreach(node.content) do |file_path|
+      next if @config[:ignore_folders].include?(file_path)
+      path = "#{node.content}/#{file_path}"
+      child_node = Tree::TreeNode.new(file_path, path)
+      node << child_node
+      if FileTest.directory?(path)
+        build_directory_tree(child_node)
+      end
+    end
+    node
+  end
+
   # Find installations based on matches set in the Client classes
   # The Find Module can match a directory and prune it, so it backs
   # out of the directory and does not keep recursing on it.
   # It is much more efficient than just recursing further over it once you've
   # matched your installation.
   def find_installs matches
+    # tree = build_directory_tree Tree::TreeNode.new "ROOT", @config[:vhost_folders]
     directories = []
     glob_dir = File.join(@config[:vhost_folders], "")
     Find.find(glob_dir) do |path|
