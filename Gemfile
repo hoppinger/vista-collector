@@ -7,6 +7,7 @@ gem "php-serialize"
 gem "rake"
 gem "json"
 gem 'whenever', :require => false
+gem "rubytree"
 
 group :development do
   gem "tux"
