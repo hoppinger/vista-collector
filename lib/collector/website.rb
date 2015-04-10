@@ -15,7 +15,7 @@ module Collector
     end
 
     def project_name
-     path
+      path.sub(@vhost, '')
     end
 
     def has_update(newest_ver)
