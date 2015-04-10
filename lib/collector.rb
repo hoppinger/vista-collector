@@ -22,6 +22,24 @@ module Collector
     @config = Settings.config
   end
 
+  # Find installations based on matches set in the Client classes
+  # The Find Module can match a directory and prune it, so it backs
+  # out of the directory and does not keep recursing on it.
+  # It is much more efficient than just recursing further over it once you've
+  # matched your installation.
+  def find_installs matches
+    tree = build_directory_tree (Tree::TreeNode.new "ROOT", @config[:vhost_folders]), @config[:max_depth]
+    websites = get_websites_from tree
+
+    directories = websites.map do |website|
+      if website[:type] == self.class::CMS_TYPE
+        website[:path]
+      end
+    end.compact!
+
+    directories
+  end
+
   def build_directory_tree node, max_depth
     return if node.node_depth > max_depth
     Dir.foreach(node.content) do |file_path|
@@ -55,24 +73,6 @@ module Collector
       end
       return childs
     end
-  end
-
-  # Find installations based on matches set in the Client classes
-  # The Find Module can match a directory and prune it, so it backs
-  # out of the directory and does not keep recursing on it.
-  # It is much more efficient than just recursing further over it once you've
-  # matched your installation.
-  def find_installs matches
-    tree = build_directory_tree (Tree::TreeNode.new "ROOT", @config[:vhost_folders]), @config[:max_depth]
-    websites = get_websites_from tree
-
-    directories = websites.map do |website|
-      if website[:type] == self.class::CMS_TYPE
-        website[:path]
-      end
-    end.compact!
-
-    directories
   end
 
   def get_folder_type node
