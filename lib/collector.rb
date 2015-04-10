@@ -22,8 +22,8 @@ module Collector
     @config = Settings.config
   end
 
-  def build_directory_tree node
-    return if node.node_depth > @config[:max_depth]
+  def build_directory_tree node, max_depth
+    return if node.node_depth > max_depth
     Dir.foreach(node.content) do |file_path|
       next if @config[:ignore_folders].include?(file_path)
       path = "#{node.content}/#{file_path}"
@@ -31,7 +31,7 @@ module Collector
       node << child_node
       begin
         if FileTest.directory?(path)
-          build_directory_tree(child_node)
+          build_directory_tree child_node, max_depth
         end
       rescue Errno::EACCES
         next
@@ -63,7 +63,7 @@ module Collector
   # It is much more efficient than just recursing further over it once you've
   # matched your installation.
   def find_installs matches
-    tree = build_directory_tree Tree::TreeNode.new "ROOT", @config[:vhost_folders]
+    tree = build_directory_tree (Tree::TreeNode.new "ROOT", @config[:vhost_folders]), @config[:max_depth]
     websites = get_websites_from tree
 
     directories = websites.map do |website|
