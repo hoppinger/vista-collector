@@ -11,7 +11,7 @@ module Collector
       end
 
       def find_client_installs
-        find_installs ["wp-config.php"]
+        find_installs
       end
 
       def collect_single(website)

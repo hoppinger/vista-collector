@@ -27,7 +27,8 @@ module Collector
   # out of the directory and does not keep recursing on it.
   # It is much more efficient than just recursing further over it once you've
   # matched your installation.
-  def find_installs matches
+  def find_installs
+
     tree = build_directory_tree (Tree::TreeNode.new "ROOT", @config[:vhost_folders]), @config[:max_depth]
     websites = get_websites_from tree
 
@@ -39,6 +40,7 @@ module Collector
 
     directories
   end
+
 
   def build_directory_tree node, max_depth
     return if node.node_depth > max_depth

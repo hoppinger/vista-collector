@@ -10,7 +10,7 @@ module Collector
       end
 
       def find_client_installs
-        find_installs ["modules", "sites"]
+        find_installs
       end
 
       def collect_single(website)
