@@ -15,11 +15,7 @@ module Collector
     end
 
     def project_name
-      if File.split(@dir).include?(".")
-        File.split(@dir).last
-      else
-        File.split(@dir).first
-      end
+     path
     end
 
     def has_update(newest_ver)
