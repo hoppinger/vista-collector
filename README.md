@@ -68,3 +68,5 @@ Although this project is set up to be autonomous using cron jobs, you can run th
     bundle exec rake collect_all
 
 And it will push the data to the master server.
+
+## Eelco was here
