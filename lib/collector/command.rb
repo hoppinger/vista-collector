@@ -19,10 +19,6 @@ module Collector
     # are converted to correct boolean values and method definitions.
     def json_parse(info)
       begin
-        info.gsub!('"update"', '"has_update"')
-        info.gsub!('"none"', 'false')
-        info.gsub!('"available"', 'true')
-        info.gsub!('"security"', 'true')
         output = JSON.parse(info)
       rescue JSON::ParserError
         say("<%= color('[stderr]:', :red) %> Error parsing json in #{current.dir}")
