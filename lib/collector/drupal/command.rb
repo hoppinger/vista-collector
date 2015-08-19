@@ -9,24 +9,25 @@ module Collector
 
       def initialize(current)
         @current = current
+        @drush = ENV['DRUSH'] ? ENV['DRUSH'] : 'drush'
       end
 
       def blog_name
-        execute("cd #{@current.path} && drush vista-n") do |output, error|
+        execute("cd #{@current.path} && #{@drush} vista-n") do |output, error|
           @current.errors << error unless error.nil?
           @current.blog_name = output
         end
       end
 
       def version
-        execute("cd #{@current.path} && drush vista-cv") do |output, error|
+        execute("cd #{@current.path} && #{@drush} vista-cv") do |output, error|
           @current.errors << error unless error.nil?
           @current.version = output
         end
       end
 
       def plugins
-        execute("cd #{@current.path} && drush vista-m") do |output, error|
+        execute("cd #{@current.path} && #{@drush} vista-m") do |output, error|
           @current.errors << error unless error.nil?
           @current.plugins = json_parse(output)
         end
