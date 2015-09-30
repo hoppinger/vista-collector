@@ -17,11 +17,12 @@ module Collector
       def collect_single(website)
         command = Collector::Wordpress::Command.new(website)
         website.type = :wordpress
-        begin
-          command.blog_name; command.version; command.plugins
-        rescue
-          website.nullify
-        end
+
+        command.blog_name
+        command.version
+        command.plugins
+        command.site_meta
+
       end
 
       def check_latest_wp_version

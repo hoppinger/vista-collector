@@ -2,7 +2,7 @@ module Collector
   class Website
 
     attr_accessor :vhost, :dir, :blog_name, :version, :plugins,
-      :type, :errors
+      :type, :errors, :meta
 
     def initialize(vhost, dir)
       @vhost = vhost
@@ -47,9 +47,9 @@ module Collector
           website_errors: errors,
           plugins: plugins,
           cms_type: type,
+          meta: meta
         }
       }
     end
-
   end
 end

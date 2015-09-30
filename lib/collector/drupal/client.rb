@@ -16,11 +16,12 @@ module Collector
       def collect_single(website)
         command = Collector::Drupal::Command.new(website)
         website.type = :drupal
-        begin
-          command.blog_name; command.version; command.plugins
-        rescue
-          website.nullify
-        end
+
+        command.blog_name
+        command.version
+        command.plugins
+        command.site_meta
+
       end
 
     end

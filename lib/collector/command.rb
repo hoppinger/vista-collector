@@ -26,6 +26,22 @@ module Collector
       end
     end
 
+    def site_meta
+      meta_location = @current.vhost + '/' + @current.dir.sub(current.vhost, '').split('/').reject(&:empty?).first + '/site-meta.json'
+
+      begin
+        meta_file = File.read(meta_location)
+        @current.meta = JSON.parse(meta_file)
+      rescue Errno::ENOENT
+        say("<%= color('[stderr]:', :red) %> Couldn't find meta_data at location #{meta_location}")
+        @current.meta = nil
+      rescue JSON::ParserError
+        say("<%= color('[stderr]:', :red) %> Error parsing json from #{meta_location}")
+        @current.meta = nil
+      end
+
+    end
+
   end
 
   class WpCliErrorException < Exception; end;
