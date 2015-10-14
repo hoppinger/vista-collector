@@ -40,21 +40,24 @@ module Collector
     # Send data of all parsed websites and return all their
     # API responses as an array.
     def send_data
-      request = Collector::Request.new(self.api_location,
+      request = Collector::Request.
+      new(self.api_location,
         :user => config[:htpasswd_user],
         :pass => config[:htpasswd_pass])
 
-      @websites.map do |website|
-        request.send(website.to_hash(@version).merge({
-          server: config[:client_name].underscore,
-        }))
-      end
+      # convert the array of object to a hash
+      server = {
+        websites: @websites.map{ |w| w.to_hash(@version).merge({server: config[:client_name].underscore }) }.map{ |w| w[:website] },
+        name: config[:client_name].underscore
+      }
+
+      request.send(server)
+
     end
 
     def api_location
       "http://#{config[:master_server]}:" +
-      "#{config[:master_server_port]}/servers/" +
-      "#{config[:client_name].underscore}/websites/create_or_update.json"
+      "#{config[:master_server_port]}/servers"
     end
   end
 end
