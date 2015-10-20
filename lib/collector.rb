@@ -1,7 +1,6 @@
 require './ext/string_to_underscore'
 require './lib/collector/client'
 require './lib/collector/command'
-require './lib/collector/request'
 require './lib/collector/website'
 require './lib/collector/wordpress/client'
 require './lib/collector/wordpress/command'
