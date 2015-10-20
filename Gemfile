@@ -8,6 +8,7 @@ gem "rake"
 gem "json"
 gem 'whenever', :require => false
 gem "rubytree"
+gem "bundler"
 
 group :development do
   gem "tux"
