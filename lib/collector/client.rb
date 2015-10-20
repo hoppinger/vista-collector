@@ -25,10 +25,12 @@ module Collector
         installs = find_client_installs
       end
 
-      installs.each do |install|
-        website = Collector::Website.new(@config[:vhost_folders], install)
-        @websites << website
-        collect_single(website)
+      if installs
+        installs.each do |install|
+          website = Collector::Website.new(@config[:vhost_folders], install)
+          @websites << website
+          collect_single(website)
+        end
       end
     end
 
