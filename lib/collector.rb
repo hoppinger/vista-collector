@@ -37,7 +37,7 @@ module Collector
       if website[:type] == self.class::CMS_TYPE
         website[:path]
       end
-    end.compact!
+    end.compact
 
     directories
   end
