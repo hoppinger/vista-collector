@@ -56,7 +56,10 @@ Then install ruby 2.2.3
 ```
 rbenv install 2.2.3
 ```
-If this fails it's probapply because of libreadline. In that case you can run the apt-get install command rbenv tells you to use.
+If this fails it's probapply because of libreadline. In that case you can run.
+```
+apt-get install -y libreadline-dev
+```
 While you are at it you should also set 2.2.3 as default (only if there isn't a default set already)
 ```
 rbenv global 2.2.3
