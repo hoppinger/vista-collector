@@ -14,7 +14,7 @@ To collect the Wordpress/Drupal data, the app uses [WP-CLI](https://github.com/w
 To install you simply need to clone it and install the dependencies with bundle
 
     # On your server with all website directories
-    git clone git@github.com:tolgap/vista-collector.git
+    git clone git@github.com:hoppinger/vista-collector.git
     cd vista-collector/
 
 Install the gems with bundler
