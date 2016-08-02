@@ -28,6 +28,7 @@ class Request
     response     = Net::HTTP.new(uri.host, uri.port).start do |http|
       http.read_timeout = 200
       http.request(request)
+      http.use_ssl = true
     end
 
     response.code
@@ -42,7 +43,6 @@ class Request
     user = @options[:user] || nil
     pass = @options[:pass] || nil
 
-    request.use_ssl = true
     request.basic_auth user, pass
     request
   end
