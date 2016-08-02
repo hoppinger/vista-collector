@@ -58,7 +58,7 @@ module Collector
     end
 
     def api_location
-      "http://#{config[:master_server]}:" +
+      "https://#{config[:master_server]}:" +
       "#{config[:master_server_port]}/servers"
     end
   end

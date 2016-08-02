@@ -42,6 +42,7 @@ class Request
     user = @options[:user] || nil
     pass = @options[:pass] || nil
 
+    request.use_ssl = true
     request.basic_auth user, pass
     request
   end
@@ -56,7 +57,7 @@ class Request
   end
 
   def api_location
-    "http://#{@server}:" + @port
+    "https://#{@server}:" + @port
   end
 
 end
