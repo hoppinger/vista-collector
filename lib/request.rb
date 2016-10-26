@@ -30,10 +30,10 @@ class Request
     @logger.debug "Send: #{resource}"
 
     request.body = result.to_json
-    response     = Net::HTTP.new(uri.host, uri.port).start do |http|
-      http.read_timeout = 200
-      http.request(request)
-      http.use_ssl = true
+    response = Net::HTTP.start(uri.host, uri.port,
+      :use_ssl => uri.scheme == 'https') do |http|
+         http.read_timeout = 500
+         http.request(request)
     end
 
     @logger.debug "#{resource}, #{response.code}"
