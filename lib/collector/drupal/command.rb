@@ -8,6 +8,7 @@ module Collector
       attr_accessor :current
 
       def initialize(current)
+        super
         @current = current
         @drush = ENV['DRUSH'] ? ENV['DRUSH'] : 'drush'
       end

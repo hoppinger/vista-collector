@@ -9,6 +9,7 @@ module Collector
       attr_accessor :current
 
       def initialize(current)
+        super
         @current = current
 
         @lockfile = Bundler::LockfileParser.new(Bundler.read_file("#{@current.path}/Gemfile.lock"));

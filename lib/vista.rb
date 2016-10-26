@@ -3,6 +3,11 @@ require "./lib/request"
 class Vista
 
   def initialize()
+    Dir.mkdir('log') unless File.exists?('log')
+
+    @logger = Logger.new('log/vista.log', 10, 1024000)
+    @logger.formatter = Logger::Formatter.new
+
     @config = Settings.config
     @websites = []
   end
@@ -10,6 +15,8 @@ class Vista
   def collect *collectors
     collectors.each(&:collect_all);
     @websites = collectors.reduce([]) { |acc, collectors| acc + collectors.websites }
+
+    @logger.debug @websites.reduce("") { |acc, w| "#{acc} \n #{w.dir} #{w.type} #{w.version}" }
   end
 
   def send_data

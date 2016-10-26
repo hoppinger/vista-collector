@@ -8,6 +8,7 @@ module Collector
       attr_accessor :current
 
       def initialize(current)
+        super
         @current = current
         @wp_cli = ENV['WP_CLI'] ? ENV['WP_CLI'] : 'wp'
       end
