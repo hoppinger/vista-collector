@@ -1,6 +1,6 @@
 Gemfile.lock
 config/settings.rb
 config/directories.json
-log/
+log/*
 
 **.swp
