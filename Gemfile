@@ -9,6 +9,7 @@ gem "json"
 gem 'whenever', :require => false
 gem "rubytree"
 gem "bundler"
+gem "inifile"
 
 group :development do
   gem "tux"
