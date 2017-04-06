@@ -11,6 +11,7 @@ task :collect_all do
     Collector::Sinatra::Client.new,
     Collector::Wordpress::Client.new,
     Collector::Drupal::Client.new,
+    Collector::Symfony::Client.new
   )
   vista.send_data
 end
@@ -23,6 +24,7 @@ task :collect_and_debug do
     Collector::Sinatra::Client.new,
     Collector::Wordpress::Client.new,
     Collector::Drupal::Client.new,
+    Collector::Symfony::Client.new
   )
 
   binding.pry
