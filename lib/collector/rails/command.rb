@@ -12,7 +12,7 @@ module Collector
         super
         @current = current
 
-        @lockfile = Bundler::LockfileParser.new(Bundler.read_file("#{@current.path}/Gemfile.lock"));
+        @lockfile = File.exist?("#{@current.path}/Gemfile.lock") ? Bundler::LockfileParser.new(Bundler.read_file("#{@current.path}/Gemfile.lock")) : false
       end
 
       def blog_name
@@ -23,6 +23,11 @@ module Collector
       end
 
       def version
+        unless @lockfile
+          @current.version = ''
+          return
+        end
+
         rails = @lockfile.specs.select{|g| g.name == "rails"}.first;
 
         if rails
@@ -32,6 +37,11 @@ module Collector
       end
 
       def plugins
+        unless @lockfile
+          @current.plugins = []
+          return
+        end
+
         @current.plugins = @lockfile.specs.map do |g|
           {
             name: g.name,
