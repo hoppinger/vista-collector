@@ -7,7 +7,7 @@ module Settings
       :wordpress => [
         ["wp-cli.yml"],
         ["wp-config.php"],
-      ], 
+      ],
       :drupal => [
         ["sites", "modules", "includes"],
       ]
@@ -27,7 +27,8 @@ module Settings
       '.bundle'
     ],
     :htpasswd_user      => nil,                   # The basic auth user.
-    :htpasswd_pass      => nil                    # The basic auth password.
+    :htpasswd_pass      => nil,                   # The basic auth password.
+    :api_token          => nil                    # The API token
   }
 
   def self.config

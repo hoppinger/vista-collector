@@ -25,7 +25,8 @@ class Vista
         @config[:master_server_port],
         {
           user: @config[:htpasswd_user],
-          pass: @config[:htpasswd_pass]
+          pass: @config[:htpasswd_pass],
+          ApiToken: @config[:api_token]
         }
       )
 
@@ -35,7 +36,7 @@ class Vista
         name: @config[:client_name].underscore
       }
 
-      request.send('/servers', server)
+      request.send('/collector', server)
   end
 
 end
