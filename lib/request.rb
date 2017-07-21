@@ -31,6 +31,7 @@ class Request
 
     request.body = result.to_json
     response = Net::HTTP.start(uri.host, uri.port,
+      :verify_mode => OpenSSL::SSL::VERIFY_NONE,
       :use_ssl => uri.scheme == 'https') do |http|
          http.read_timeout = 500
          http.request(request)
