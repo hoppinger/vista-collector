@@ -38,8 +38,8 @@ module Collector
       @current.meta = {};
 
       begin
-        meta_file = File.read(meta_location)
-        @current.meta = JSON.parse(meta_file)
+        #meta_file = File.read(meta_location)
+        #@current.meta = JSON.parse(meta_file)
       rescue Errno::ENOENT
         @logger.warn "Couldn't find meta_data at location #{meta_location}"
       rescue JSON::ParserError
