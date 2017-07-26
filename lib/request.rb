@@ -29,7 +29,7 @@ class Request
 
     @logger.debug "Send: #{resource}"
 
-    request.body = result.to_json
+    request.body = result.to_s.to_json(quirks_mode: true)
     response = Net::HTTP.start(uri.host, uri.port,
       :verify_mode => OpenSSL::SSL::VERIFY_NONE,
       :use_ssl => uri.scheme == 'https') do |http|
