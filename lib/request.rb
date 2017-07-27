@@ -26,7 +26,7 @@ class Request
     request = Net::HTTP::Post.new(uri.path,
       initheader = {
         'Content-Type' => 'application/json',
-        'ApiToken': @options[:api_token]
+        'ApiToken' => @options[:api_token]
     })
     request = prepare_basic_auth(request)
 
