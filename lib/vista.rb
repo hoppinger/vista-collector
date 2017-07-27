@@ -36,7 +36,7 @@ class Vista
         name: @config[:client_name].underscore
       }
 
-      request.send('/api/v1/collector', server)
+      request.send('/collector', server)
   end
 
 end
