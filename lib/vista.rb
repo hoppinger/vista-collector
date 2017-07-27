@@ -26,7 +26,7 @@ class Vista
         {
           user: @config[:htpasswd_user],
           pass: @config[:htpasswd_pass],
-          ApiToken: @config[:api_token]
+          api_token: @config[:api_token]
         }
       )
 

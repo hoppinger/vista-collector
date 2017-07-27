@@ -24,7 +24,10 @@ class Request
     uri = URI(api_location + resource)
 
     request = Net::HTTP::Post.new(uri.path,
-      initheader = {'Content-Type' => 'application/json'})
+      initheader = {
+        'Content-Type' => 'application/json',
+        'ApiToken': @options[:api_token]
+    })
     request = prepare_basic_auth(request)
 
     @logger.debug "Send: #{resource}"
