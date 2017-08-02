@@ -1,6 +1,3 @@
-require 'net/http'
-require 'uri'
-
 class Request
 
   def initialize(server, port, options = {})
@@ -26,13 +23,14 @@ class Request
     request = Net::HTTP::Post.new(uri.path,
       initheader = {
         'Content-Type' => 'application/json',
-        'ApiToken' => @options[:api_token]
+	'ApiToken' => @options[:api_token]
     })
     request = prepare_basic_auth(request)
 
     @logger.debug "Send: #{resource}"
 
-    request.body = result.to_s.to_json(quirks_mode: true)
+    request.body = result.to_json.to_s
+
     response = Net::HTTP.start(uri.host, uri.port,
       :verify_mode => OpenSSL::SSL::VERIFY_NONE,
       :use_ssl => uri.scheme == 'https') do |http|
