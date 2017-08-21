@@ -10,6 +10,7 @@ module Settings
     :htpasswd_user      => '',                            # The basic auth user.
     :htpasswd_pass      => '',              # The basic auth password.
     :api_token          => '',
+    :server_info_file   => '',
     :cms                => {
       :wordpress => [
         ['wp-cli.yml'],

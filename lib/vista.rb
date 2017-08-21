@@ -17,6 +17,19 @@ class Vista
     @websites = collectors.reduce([]) { |acc, collectors| acc + collectors.websites }
 
     @logger.debug @websites.reduce("") { |acc, w| "#{acc} \n #{w.dir} #{w.type} #{w.version}" }
+
+    server_info = File.read(@config[:server_info_file])
+    server_info_lines = server_info.split("\n")
+
+    server_info = {}
+
+    server_info_lines.each do |line|
+      key_and_value = line.split("=")
+      server_info.merge(key_and_value.first => key_and_value.last)
+    end
+
+    @server_info = server_info
+
   end
 
   def send_data
@@ -34,6 +47,8 @@ class Vista
       server = {
         websites: @websites.map{ |w| w.to_hash(@version).merge({server: @config[:client_name].underscore }) }.map{ |w| w[:website] },
         name: @config[:client_name].underscore
+        client: @server_info[:client]
+        otap: @server_info[:otap]
       }
 
       puts request.send('/collector', server)
