@@ -46,8 +46,8 @@ class Vista
       # convert the array of object to a hash
       server = {
         websites: @websites.map{ |w| w.to_hash(@version).merge({server: @config[:client_name].underscore }) }.map{ |w| w[:website] },
-        name: @config[:client_name].underscore
-        client: @server_info[:client]
+        name: @config[:client_name].underscore,
+        client: @server_info[:client],
         otap: @server_info[:otap]
       }
 
