@@ -72,7 +72,7 @@ class Vista
           name: @config[:client_name].underscore
         }
 
-        request.send('/servers', server)
+        puts request.send('/servers', server)
       end
   end
 
