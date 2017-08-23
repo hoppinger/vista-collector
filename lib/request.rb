@@ -1,3 +1,5 @@
+require 'openssl'
+
 class Request
 
   def initialize(server, port, options = {})
