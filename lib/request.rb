@@ -3,6 +3,8 @@ require 'openssl'
 class Request
 
   def initialize(server, port, options = {})
+    Encoding.default_external = 'UTF-8'
+    
     @logger = Logger.new('log/request.log', 10, 1024000)
     @logger.formatter = Logger::Formatter.new
     @server = server
@@ -31,7 +33,7 @@ class Request
 
     @logger.debug "Send: #{resource}"
 
-    request.body = result.to_json.to_s
+    request.body = result.to_json
 
     response = Net::HTTP.start(uri.host, uri.port,
       :verify_mode => OpenSSL::SSL::VERIFY_NONE,

@@ -5,6 +5,8 @@ require 'uri'
 class RequestVista
 
   def initialize(server, port, options = {})
+    Encoding.default_external = 'UTF-8'
+    
     @logger = Logger.new('log/request.log', 10, 1024000)
     @logger.formatter = Logger::Formatter.new
     @server = server
@@ -31,6 +33,7 @@ class RequestVista
     @logger.debug "Send: #{resource}"
 
     request.body = result.to_json
+    
     response = Net::HTTP.start(uri.host, uri.port,
       :use_ssl => uri.scheme == 'https') do |http|
          http.read_timeout = 500

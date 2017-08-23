@@ -4,6 +4,8 @@ require "./lib/request_vista"
 class Vista
 
   def initialize()
+    Encoding.default_external = 'UTF-8'
+
     Dir.mkdir('log') unless File.exists?('log')
 
     @logger = Logger.new('log/vista.log', 10, 1024000)
