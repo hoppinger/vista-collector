@@ -2,6 +2,7 @@ module Settings
   @settings = {
     :client_name        => 'client_name',  # A unique name for this Collector client.
     :master_server      => '',           # For example 'http://www.server.com/path'.
+    :vista_server       => ''             #Set if you want to push the data to Vista as well
     :master_server_port => '',                            # The port for your server. Default Sinatra port set.
     :predefined_list?   => ,                            # Predefined list of directories in config folder?
     :interval_unit      => '',                           # For example 'days', 'week', 'hour'.
