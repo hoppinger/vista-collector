@@ -28,11 +28,11 @@ class Vista
 
     server_info_lines.each do |line|
       key_and_value = line.split("=")
-      server_info.merge(key_and_value.first => key_and_value.last)
+      next if key_and_value.count != 2
+      server_info = server_info.merge(key_and_value.first => key_and_value.last)
     end
 
     @server_info = server_info
-
   end
 
   def send_data
@@ -50,8 +50,8 @@ class Vista
       server = {
         websites: @websites.map{ |w| w.to_hash(@version).merge({server: @config[:client_name].underscore }) }.map{ |w| w[:website] },
         name: @config[:client_name].underscore,
-        client: @server_info[:client],
-        otap: @server_info[:otap]
+        client: @server_info["client"],
+        otap: @server_info["otap"]
       }
 
       puts request.send('/collector', server)
