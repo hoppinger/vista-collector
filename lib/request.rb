@@ -25,11 +25,14 @@ class Request
     uri = URI(api_location + resource)
 
     request = Net::HTTP::Post.new(uri.path,
-      initheader = {
-        'Content-Type' => 'application/json',
-	'ApiToken' => @options[:api_token]
+    
+    initheader = {
+      'Content-Type' => 'application/json',
+      'ApiToken' => @options[:api_token]
     })
     request = prepare_basic_auth(request)
+
+    request.read_timeout = 999999
 
     @logger.debug "Send: #{resource}"
 
