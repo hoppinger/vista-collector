@@ -56,7 +56,7 @@ class Vista
 
       puts request.send('/collector', server)
 
-      if @config.key?("vista_server")
+      if @config.key? :vista_server
         request2 = RequestVista.new(
           @config[:vista_server],
           @config[:master_server_port],
