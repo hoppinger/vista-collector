@@ -25,21 +25,23 @@ class Request
     uri = URI(api_location + resource)
 
     request = Net::HTTP::Post.new(uri.path,
-      initheader = {
-        'Content-Type' => 'application/json',
-        'ApiToken' => @options[:api_token]
-      })
+    
+    initheader = {
+      'Content-Type' => 'application/json',
+      'ApiToken' => @options[:api_token]
+    })
     request = prepare_basic_auth(request)
+
+    request.read_timeout = 999999
 
     @logger.debug "Send: #{resource}"
 
     request.body = result.to_json
 
     response = Net::HTTP.start(uri.host, uri.port,
-      :read_timeout => 999999
       :verify_mode => OpenSSL::SSL::VERIFY_NONE,
       :use_ssl => uri.scheme == 'https') do |http|
-         http.read_timeout = 500
+         http.read_timeout = 999999
          http.request(request)
     end
 
