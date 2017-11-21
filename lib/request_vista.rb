@@ -1,6 +1,8 @@
 require 'openssl'
+require 'net/http'
+require 'uri'
 
-class Request
+class RequestVista
 
   def initialize(server, port, options = {})
     Encoding.default_external = 'UTF-8'
@@ -21,25 +23,21 @@ class Request
   # be 200 (OK) if everything went right.
   #
   def send(resource, result)
+
     uri = URI(api_location + resource)
 
     request = Net::HTTP::Post.new(uri.path,
-      initheader = {
-        'Content-Type' => 'application/json',
-        'ApiToken' => @options[:api_token]
-      }
-    )
+      initheader = {'Content-Type' => 'application/json'})
     request = prepare_basic_auth(request)
 
     @logger.debug "Send: #{resource}"
 
     request.body = result.to_json
-
+    
     response = Net::HTTP.start(uri.host, uri.port,
-      :verify_mode => OpenSSL::SSL::VERIFY_NONE,
       :use_ssl => uri.scheme == 'https') do |http|
-          http.read_timeout = 999999
-          http.request(request)
+         http.read_timeout = 500
+         http.request(request)
     end
 
     @logger.debug "#{resource}, #{response.code}"

@@ -1,33 +1,40 @@
 module Settings
   @settings = {
-    :client_name        => "my_client_name",   # A unique name for this Collector client.
-    :master_server      => "localhost",           # For example 'server.com/path'. Don't add www or http://
-    :master_server_port => "3000",                # The port for your server. Default Rails port set.
+    :client_name        => 'client_name',  # A unique name for this Collector client.
+    :master_server      => '',           # For example 'http://www.server.com/path'.
+    :vista_server       => ''             #Set if you want to push the data to Vista as well
+    :master_server_port => '',                            # The port for your server. Default Sinatra port set.
+    :predefined_list?   => ,                            # Predefined list of directories in config folder?
+    :interval_unit      => '',                           # For example 'days', 'week', 'hour'.
+    :interval_quantity  => 1,                                # How often you want to run the info job based on your interval unit.
+    :vhost_folders      => '',                      # This point to your directory where all your project folders are located.
+    :htpasswd_user      => '',                            # The basic auth user.
+    :htpasswd_pass      => '',              # The basic auth password.
+    :api_token          => '',
+    :server_info_file   => '',
     :cms                => {
       :wordpress => [
-        ["wp-cli.yml"],
-        ["wp-config.php"],
-      ], 
+        ['wp-cli.yml'],
+        ['wp-config.php'],
+      ],
       :drupal => [
-        ["sites", "modules", "includes"],
+        ['sites', 'modules', 'includes'],
+      ],
+      :rails => [
+        ['Gemfile', 'Gemfile.lock', 'app', 'db', 'public']
+      ],
+      :sinatra => [
+        ['config.ru', 'Gemfile', 'app.rb'],
+        ['config.ru', 'Gemfile', 'server.rb']
+      ],
+      :symfony => [
+        ['deps', 'app', 'bin'],
+        ['AppKernel.php'],
+        ['SymfonyRequirements.php']
       ]
-    }, # Which CMSs do you want to index
-    :predefined_list?   => false,                 # Predefined list of directories in config folder?
-    :interval_unit      => "minute",              # For example "days", "week", "hour".
-    :interval_quantity  => 10,                    # How often you want to run the info job based on your interval unit.
-    :max_depth          => 4,                     # Max depth to search in
-    :vhost_folders      => "/path/to/projects",    # This point to your directory where all your project folders are located.
-    :ignore_folders     => [
-      '.',
-      '..',
-      '.git',
-      '.node_modules',
-      'releases',
-      'builds',
-      '.bundle'
-    ],
-    :htpasswd_user      => nil,                   # The basic auth user.
-    :htpasswd_pass      => nil                    # The basic auth password.
+    },
+    :max_depth          => 4,
+    :ignore_folders     => [],
   }
 
   def self.config
