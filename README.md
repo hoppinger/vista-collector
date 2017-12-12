@@ -1,12 +1,11 @@
-Vista Collector
-===============
+
 
 The Collector is a Ruby script client which persists Wordpress plugin, Drupal module and core versions to a Vista master server. To collect the Wordpress/Drupal data, the app uses [WP-CLI](https://github.com/wp-cli/wp-cli) and [Drush](https://www.drupal.org/project/drush), so be sure to install that first on your servers.
 
 Requirements
 ------------
 
--	Ruby >= 2.2.3
+-	Ruby >= 2.2.8
 -	Bundle
 -	WP-CLI >= master
 -	Drush
